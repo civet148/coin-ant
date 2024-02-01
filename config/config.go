@@ -15,10 +15,9 @@ const (
 )
 
 type Config struct {
-	Version  string `json:"version"`
-	DSN      string `json:"dsn" toml:"dsn" db:"dsn" cli:"dsn"`
-	Debug    bool   `json:"debug" toml:"debug" db:"debug" cli:"debug"`
-	HttpAddr string `json:"http_addr" toml:"http_addr" db:"http_addr" cli:"http-addr"`
+	Version string `json:"version"`
+	DSN     string `json:"dsn" toml:"dsn" db:"dsn" cli:"dsn"`
+	Debug   bool   `json:"debug" toml:"debug" db:"debug" cli:"debug"`
 }
 
 var strFilePath = path.Join(types.DefaultConfigHome, strConfName)

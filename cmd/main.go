@@ -85,7 +85,7 @@ func main() {
 var runCmd = &cli.Command{
 	Name:      CMD_NAME_RUN,
 	Usage:     "run as a daemon service",
-	ArgsUsage: "[listen address]",
+	ArgsUsage: "",
 	Aliases:   []string{CMD_NAME_START},
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
@@ -100,10 +100,9 @@ var runCmd = &cli.Command{
 	},
 	Action: func(cctx *cli.Context) error {
 		cfg := &config.Config{
-			Version:  Version,
-			DSN:      cctx.String(CMD_FLAG_NAME_DSN),
-			Debug:    cctx.Bool(CMD_FLAG_NAME_DEBUG),
-			HttpAddr: types.DefaultHttpListenAddr,
+			Version: Version,
+			DSN:     cctx.String(CMD_FLAG_NAME_DSN),
+			Debug:   cctx.Bool(CMD_FLAG_NAME_DEBUG),
 		}
 
 		cfg.Version = Version
@@ -113,9 +112,6 @@ var runCmd = &cli.Command{
 			log.SetLevel("info")
 		}
 		log.Json("configuration", cfg)
-		if cctx.Args().First() != "" {
-			cfg.HttpAddr = cctx.Args().First()
-		}
 		if err := cfg.Save(); err != nil {
 			return err
 		}
