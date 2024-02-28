@@ -67,3 +67,21 @@ func (dao *RichListDAO) QueryByCondition(conditions map[string]interface{}, colu
 	}
 	return
 }
+
+func (dao *RichListDAO) QueryByAddresses(chainId int, symbol, contract string, addresses ...string) (dos []*models.RichListDO, err error) {
+	for _, addr := range addresses {
+		e := dao.db.Model(&dos).
+			Table(models.TableNameRichList).
+			Eq(models.RICH_LIST_COLUMN_CHAIN_ID, chainId).
+			Eq(models.RICH_LIST_COLUMN_ADDRESS, addr).
+			Eq(models.RICH_LIST_COLUMN_CONTRACT_ADDR, contract).
+			Eq(models.RICH_LIST_COLUMN_SYMBOL, symbol)
+		if _, err = e.Query(); err != nil {
+			return nil, err
+		}
+		if len(dos) != 0 {
+			return dos, nil
+		}
+	}
+	return
+}

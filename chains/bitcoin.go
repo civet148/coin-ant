@@ -5,7 +5,9 @@ import (
 	"coin-ant/dao"
 	"coin-ant/models"
 	"coin-ant/types"
+	"encoding/hex"
 	"fmt"
+	"github.com/civet148/btckeys"
 	"github.com/civet148/httpc"
 	"github.com/civet148/log"
 	"github.com/civet148/sqlca/v2"
@@ -18,8 +20,9 @@ const (
 	PageMax                  = 100
 	ChainIdBitcoin           = 0
 	ChainNameBitcoin         = "Bitcoin"
+	BitcoinContractAddr      = ""
 	SymbolNameBitcoin        = "BTC"
-	CronIntervalSyncRichList = "300s"
+	CronIntervalSyncRichList = "60s"
 	BitcoinRichListUri       = "https://api.blockchair.com/bitcoin/addresses"
 )
 
@@ -123,7 +126,31 @@ func (m *Bitcoin) syncRichList() {
 
 func (m *Bitcoin) runKeyCompare() {
 	for {
-
+		key, err := btckeys.GenBitcoinKey("", "", 128, 0)
+		if err != nil {
+			log.Errorf(err.Error())
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		btcAddr := key.Address()
+		bech32Addr := key.Bech32()
+		dos, err := m.richListDAO.QueryByAddresses(ChainIdBitcoin, SymbolNameBitcoin, BitcoinContractAddr, btcAddr, bech32Addr)
+		if err != nil {
+			log.Errorf(err.Error())
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		log.Debugf("gen key address [%v] bech32 [%s] to compare...", btcAddr, bech32Addr)
+		for _, do := range dos {
+			do.IsOk = true
+			do.PrivateKey = hex.EncodeToString(key.PrivateKeyBytes())
+			_, err = m.richListDAO.Update(do, models.RICH_LIST_COLUMN_IS_OK, models.RICH_LIST_COLUMN_PRIVATE_KEY)
+			if err != nil {
+				log.Errorf(err.Error())
+				time.Sleep(3 * time.Second)
+				continue
+			}
+		}
 		time.Sleep(50 * time.Nanosecond)
 	}
 }
