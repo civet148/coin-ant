@@ -8,33 +8,35 @@ import "github.com/civet148/sqlca/v2"
 const TableNameRichList = "rich_list" //
 
 const (
-	RICH_LIST_COLUMN_ID            = "id"
-	RICH_LIST_COLUMN_CHAIN_ID      = "chain_id"
-	RICH_LIST_COLUMN_CHAIN_NAME    = "chain_name"
-	RICH_LIST_COLUMN_SYMBOL        = "symbol"
-	RICH_LIST_COLUMN_ADDRESS       = "address"
-	RICH_LIST_COLUMN_BALANCE       = "balance"
-	RICH_LIST_COLUMN_CONTRACT_ADDR = "contract_addr"
-	RICH_LIST_COLUMN_IS_OK         = "is_ok"
-	RICH_LIST_COLUMN_KEY_PHRASE    = "key_phrase"
-	RICH_LIST_COLUMN_PRIVATE_KEY   = "private_key"
-	RICH_LIST_COLUMN_CREATED_TIME  = "created_time"
-	RICH_LIST_COLUMN_UPDATED_TIME  = "updated_time"
+	RICH_LIST_COLUMN_ID             = "id"
+	RICH_LIST_COLUMN_CHAIN_ID       = "chain_id"
+	RICH_LIST_COLUMN_CHAIN_NAME     = "chain_name"
+	RICH_LIST_COLUMN_SYMBOL         = "symbol"
+	RICH_LIST_COLUMN_ADDRESS        = "address"
+	RICH_LIST_COLUMN_BALANCE        = "balance"
+	RICH_LIST_COLUMN_CONTRACT_ADDR  = "contract_addr"
+	RICH_LIST_COLUMN_IS_OK          = "is_ok"
+	RICH_LIST_COLUMN_KEY_PHRASE     = "key_phrase"
+	RICH_LIST_COLUMN_PRIVATE_KEY    = "private_key"
+	RICH_LIST_COLUMN_DERIVATON_PATH = "derivaton_path"
+	RICH_LIST_COLUMN_CREATED_TIME   = "created_time"
+	RICH_LIST_COLUMN_UPDATED_TIME   = "updated_time"
 )
 
 type RichListDO struct {
-	Id           int64         `json:"id" db:"id" `                                     //auto-incr id
-	ChainId      int32         `json:"chain_id" db:"chain_id" `                         //block chain id [0=Bitcoin 1=Ethereum]
-	ChainName    string        `json:"chain_name" db:"chain_name" `                     //block chain name [Bitcoin/Ethereum]
-	Symbol       string        `json:"symbol" db:"symbol" `                             //token symbol
-	Address      string        `json:"address" db:"address" `                           //owner address
-	Balance      sqlca.Decimal `json:"balance" db:"balance" `                           //owner balance
-	ContractAddr string        `json:"contract_addr" db:"contract_addr" `               //contract address (empty means native token)
-	IsOk         bool          `json:"is_ok" db:"is_ok" `                               //is cracked (0=no 1=yes)
-	KeyPhrase    string        `json:"key_phrase" db:"key_phrase" `                     //phrase words
-	PrivateKey   string        `json:"private_key" db:"private_key" `                   //private key of hex string
-	CreatedTime  string        `json:"created_time" db:"created_time" sqlca:"readonly"` //create time
-	UpdatedTime  string        `json:"updated_time" db:"updated_time" sqlca:"readonly"` //update time
+	Id            int64         `json:"id" db:"id" `                                     //auto-incr id
+	ChainId       int32         `json:"chain_id" db:"chain_id" `                         //block chain id [0=Bitcoin 1=Ethereum]
+	ChainName     string        `json:"chain_name" db:"chain_name" `                     //block chain name [Bitcoin/Ethereum]
+	Symbol        string        `json:"symbol" db:"symbol" `                             //token symbol
+	Address       string        `json:"address" db:"address" `                           //owner address
+	Balance       sqlca.Decimal `json:"balance" db:"balance" `                           //owner balance
+	ContractAddr  string        `json:"contract_addr" db:"contract_addr" `               //contract address (empty means native token)
+	IsOk          bool          `json:"is_ok" db:"is_ok" `                               //is cracked (0=no 1=yes)
+	KeyPhrase     string        `json:"key_phrase" db:"key_phrase" `                     //phrase words
+	PrivateKey    string        `json:"private_key" db:"private_key" `                   //private key of hex string
+	DerivatonPath string        `json:"derivaton_path" db:"derivaton_path" `             //derivation path
+	CreatedTime   string        `json:"created_time" db:"created_time" sqlca:"readonly"` //create time
+	UpdatedTime   string        `json:"updated_time" db:"updated_time" sqlca:"readonly"` //update time
 }
 
 func (do *RichListDO) GetId() int64               { return do.Id }
@@ -57,6 +59,8 @@ func (do *RichListDO) GetKeyPhrase() string       { return do.KeyPhrase }
 func (do *RichListDO) SetKeyPhrase(v string)      { do.KeyPhrase = v }
 func (do *RichListDO) GetPrivateKey() string      { return do.PrivateKey }
 func (do *RichListDO) SetPrivateKey(v string)     { do.PrivateKey = v }
+func (do *RichListDO) GetDerivatonPath() string   { return do.DerivatonPath }
+func (do *RichListDO) SetDerivatonPath(v string)  { do.DerivatonPath = v }
 func (do *RichListDO) GetCreatedTime() string     { return do.CreatedTime }
 func (do *RichListDO) SetCreatedTime(v string)    { do.CreatedTime = v }
 func (do *RichListDO) GetUpdatedTime() string     { return do.UpdatedTime }
@@ -64,19 +68,20 @@ func (do *RichListDO) SetUpdatedTime(v string)    { do.UpdatedTime = v }
 
 /*
 CREATE TABLE `rich_list` (
-  `id` bigint NOT NULL COMMENT 'auto-incr id',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'auto-incr id',
   `chain_id` int NOT NULL DEFAULT '0' COMMENT 'block chain id [0=Bitcoin 1=Ethereum]',
   `chain_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'block chain name [Bitcoin/Ethereum]',
   `symbol` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'token symbol',
   `address` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'owner address',
-  `balance` decimal(50,5) NOT NULL COMMENT 'owner balance',
+  `balance` decimal(60,0) NOT NULL COMMENT 'owner balance',
   `contract_addr` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'contract address (empty means native token)',
   `is_ok` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'is cracked (0=no 1=yes)',
   `key_phrase` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'phrase words',
   `private_key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'private key of hex string',
+  `derivaton_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'derivation path',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_CHAIN_ADDRESS` (`chain_id`,`symbol`,`address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 */

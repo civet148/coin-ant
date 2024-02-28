@@ -62,7 +62,7 @@ CREATE TABLE `token_list` (
   `symbol` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'token symbol',
   `decimals` int NOT NULL DEFAULT '0' COMMENT 'token decimals',
   `contract_addr` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'contract address (empty means native token)',
-  `min_balance` decimal(55,5) NOT NULL DEFAULT '0.00000' COMMENT 'account''s minimal balance  to attack',
+  `min_balance` decimal(50,5) NOT NULL DEFAULT '0.00000' COMMENT 'account''s minimal balance  to attack',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'is deleted (0=no 1=yes)',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'updte time',

@@ -34,7 +34,7 @@ func (m *ServiceChain) Run() error {
 	}
 	for _, do := range dos {
 		opt := m.makeOptionByModel(do)
-		if err = m.runWithOption(opt); err != nil {
+		if err = m.runWithOptionAsync(opt); err != nil {
 			log.Errorf(err.Error())
 			continue
 		}
@@ -58,22 +58,22 @@ func (m *ServiceChain) makeOptionByModel(do *models.TokenListDO) (opt *types.Cha
 	}
 }
 
-func (m *ServiceChain) runWithOption(opt *types.ChainOption) (err error) {
+func (m *ServiceChain) runWithOptionAsync(opt *types.ChainOption) (err error) {
+	var instance api.ChainApi
 	switch opt.ChainId {
 	case chains.ChainIdBitcoin:
-		inst := chains.NewBitcoin(m.db, opt)
-		err = inst.Run()
-		if err != nil {
-			return log.Errorf(err.Error())
-		}
+		instance = chains.NewBitcoin(m.db, opt)
+
 	case chains.ChainIdEthereum:
-		inst := chains.NewEthereum(m.db, opt)
-		err = inst.Run()
-		if err != nil {
-			return log.Errorf(err.Error())
-		}
+		instance = chains.NewEthereum(m.db, opt)
 	default:
-		return log.Errorf("unknown chain id %v name %v", opt.ChainId, opt.ChainName)
+		return log.Errorf("unknown chain id [%v] name [%v]", opt.ChainId, opt.ChainName)
 	}
+	go func() {
+		err = instance.Run()
+		if err != nil {
+			log.Errorf("run chain id [%v] name [%v] error [%s]", opt.ChainId, opt.ChainName, err.Error())
+		}
+	}()
 	return nil
 }

@@ -84,7 +84,7 @@ func main() {
 
 var runCmd = &cli.Command{
 	Name:      CMD_NAME_RUN,
-	Usage:     "run as a daemon service",
+	Usage:     "run as a service",
 	ArgsUsage: "",
 	Aliases:   []string{CMD_NAME_START},
 	Flags: []cli.Flag{
