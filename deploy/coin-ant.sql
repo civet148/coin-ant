@@ -32,6 +32,7 @@ CREATE TABLE `rich_list` (
   `derivaton_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'derivation path',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  `extra_data` longtext COLLATE utf8mb4_unicode_ci COMMENT 'extra data',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_CHAIN_ADDRESS` (`chain_id`,`symbol`,`address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

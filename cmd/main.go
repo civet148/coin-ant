@@ -13,12 +13,12 @@ import (
 )
 
 const (
-	Version     = "v0.1.0"
+	Version     = "v0.2.0"
 	ProgramName = "coin-ant"
 )
 
 var (
-	BuildTime = "2024-02-01"
+	BuildTime = "2024-02-29"
 	GitCommit = ""
 )
 

@@ -5,7 +5,7 @@ PACK_NAME='models'
 SUFFIX_NAME='do'
 READ_ONLY='created_time,updated_time'
 DSN_URL='mysql://root:123456@192.168.1.16:3306/coin-ant?charset=utf8'
-SPEC_TYPES=''
+SPEC_TYPES='rich_list.extra_data=ExtraData'
 TINYINT_TO_BOOL='deleted,is_ok'
 IMPORT_MODELS='coin-ant/models'
 db2go --url "${DSN_URL}" --out "${OUT_DIR}" --enable-decimal --spec-type "${SPEC_TYPES}" \

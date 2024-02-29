@@ -7,7 +7,7 @@ set SUFFIX_NAME="do"
 set READ_ONLY="created_time,updated_time"
 set DSN_URL="mysql://root:123456@192.168.1.16:3306/coin-ant?charset=utf8"
 set JSON_PROPERTIES="omitempty"
-set SPEC_TYPES=""
+set SPEC_TYPES="rich_list.extra_data=ExtraData"
 set TINYINT_TO_BOOL="deleted, is_ok"
 set IMPORT_MODELS="meta-market/pkg/dal/models"
 db2go --url %DSN_URL% --out %OUT_DIR%  --enable-decimal --spec-type %SPEC_TYPES% ^

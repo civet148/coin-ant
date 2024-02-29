@@ -21,6 +21,7 @@ const (
 	RICH_LIST_COLUMN_DERIVATON_PATH = "derivaton_path"
 	RICH_LIST_COLUMN_CREATED_TIME   = "created_time"
 	RICH_LIST_COLUMN_UPDATED_TIME   = "updated_time"
+	RICH_LIST_COLUMN_EXTRA_DATA     = "extra_data"
 )
 
 type RichListDO struct {
@@ -37,6 +38,7 @@ type RichListDO struct {
 	DerivatonPath string        `json:"derivaton_path" db:"derivaton_path" `             //derivation path
 	CreatedTime   string        `json:"created_time" db:"created_time" sqlca:"readonly"` //create time
 	UpdatedTime   string        `json:"updated_time" db:"updated_time" sqlca:"readonly"` //update time
+	ExtraData     ExtraData     `json:"extra_data" db:"extra_data" sqlca:"isnull"`       //extra data
 }
 
 func (do *RichListDO) GetId() int64               { return do.Id }
@@ -65,6 +67,8 @@ func (do *RichListDO) GetCreatedTime() string     { return do.CreatedTime }
 func (do *RichListDO) SetCreatedTime(v string)    { do.CreatedTime = v }
 func (do *RichListDO) GetUpdatedTime() string     { return do.UpdatedTime }
 func (do *RichListDO) SetUpdatedTime(v string)    { do.UpdatedTime = v }
+func (do *RichListDO) GetExtraData() ExtraData    { return do.ExtraData }
+func (do *RichListDO) SetExtraData(v ExtraData)   { do.ExtraData = v }
 
 /*
 CREATE TABLE `rich_list` (
@@ -81,7 +85,8 @@ CREATE TABLE `rich_list` (
   `derivaton_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'derivation path',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+  `extra_data` longtext COLLATE utf8mb4_unicode_ci COMMENT 'extra data',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_CHAIN_ADDRESS` (`chain_id`,`symbol`,`address`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10307 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 */

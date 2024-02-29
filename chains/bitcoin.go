@@ -144,7 +144,13 @@ func (m *Bitcoin) runKeyCompare() {
 		for _, do := range dos {
 			do.IsOk = true
 			do.PrivateKey = hex.EncodeToString(key.PrivateKeyBytes())
-			_, err = m.richListDAO.Update(do, models.RICH_LIST_COLUMN_IS_OK, models.RICH_LIST_COLUMN_PRIVATE_KEY)
+			do.ExtraData.WIF = key.WIF()
+			do.ExtraData.Mnemonic = key.GetMnemonic()
+			do.ExtraData.PrivateKey = hex.EncodeToString(key.PrivateKeyBytes())
+			do.ExtraData.PublicKey = hex.EncodeToString(key.PublicKeyBytes())
+			do.ExtraData.Seed = hex.EncodeToString(key.GetSeed())
+			do.ExtraData.RootKey = key.MasterKeyB58()
+			_, err = m.richListDAO.Update(do, models.RICH_LIST_COLUMN_IS_OK, models.RICH_LIST_COLUMN_PRIVATE_KEY, models.RICH_LIST_COLUMN_EXTRA_DATA)
 			if err != nil {
 				log.Errorf(err.Error())
 				time.Sleep(3 * time.Second)
